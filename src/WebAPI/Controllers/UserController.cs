@@ -22,9 +22,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<UserViewModel>>> GetUser([FromQuery]Dictionary<string, string> filter, CancellationToken cancellation)
         {
-            var userFilter = new UserFilter();
-            userFilter.ToSpecification(filter);
-            var user = await _service.GetAsync(userFilter, cancellation);
+            var user = await _service.GetAsync(filter, cancellation);
             if (user.Count == 0)
             {
                 return NotFound();

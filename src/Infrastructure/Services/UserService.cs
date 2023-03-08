@@ -34,9 +34,10 @@ namespace Infrastructure.Services
             return await _repository.User.EditAsync(entity, id, cancellation);
         }
 
-        public async Task<List<User>> GetAsync(UserFilter filter, CancellationToken cancellation)
+        public async Task<List<User>> GetAsync(Dictionary<string, string> filter, CancellationToken cancellation)
         {
-            return await _repository.User.GetAsync(filter, cancellation);
+            
+            return await _repository.User.GetAsync(filter, new UserFilter(), cancellation);
         }
     }
 }

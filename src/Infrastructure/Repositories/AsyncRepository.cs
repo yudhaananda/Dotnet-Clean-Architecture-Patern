@@ -72,18 +72,10 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<List<T>> GetAsync(F filter, CancellationToken cancellation)
+        public async Task<List<T>> GetAsync(Dictionary<string, string> filter, BaseFilter<T> spec, CancellationToken cancellation)
         {
-            filter.ApplyFilterSpec();
             var query = _db.Set<T>().AsQueryable();
-            if (filter.Filter != null)
-            {
-                foreach (var item in filter.Filter)
-                {
-                    query = query.Where(item).AsQueryable();
-                }
-            }
-
+            query = spec.ToSpecification(filter, query);
             return await query.ToListAsync(cancellation);
         }
 

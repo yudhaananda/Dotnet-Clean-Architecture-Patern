@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,11 +11,10 @@ namespace ApplicationCore.Filters
 {
     public class UserFilter : BaseFilter<User>
     {
-        public int? Id { get; set; }
-        public string? UserName { get; set; }
 
-        public override void ToSpecification(Dictionary<string, string> filter)
+        public override IQueryable<User> ToSpecification(Dictionary<string, string> filter, IQueryable<User>query)
         {
+            
             foreach (var item in filter)
             {
                 switch (item.Key.ToLower())
@@ -23,46 +23,56 @@ namespace ApplicationCore.Filters
                         int id;
                         if (int.TryParse(item.Value, out id))
                         {
-                            Id = id;
+                            query = query.Where(x => x.Id == id);
                         } 
                         break;
                     case "username":
-                        UserName = item.Value; 
+                        query = query.Where(x => x.UserName.Contains(item.Value));
                         break;
-                    
+                    case "include":
+                        bool include;
+                        if (bool.TryParse(item.Value,out include))
+                        {
+                            if (include)
+                            {
+                                query = query.Include(x => x.UserRoles);
+                            }
+                        }
+                        break;
+                    case "order":
+                        var orderItem = item.Value.Split(" ");
+                        if (orderItem.Length == 2)
+                        {
+                            Expression<Func<User, object>>? order = null;
+                            switch (orderItem[0].ToLower())
+                            {
+                                case "id":
+                                    order = x => x.Id;
+                                    break;
+                                case "username":
+                                    order = x => x.UserName;
+                                    break;
+
+                            }
+                            switch (orderItem[1].ToLower())
+                            {
+                                case "asc":
+                                    query = query.OrderBy(order);
+                                    break;
+                                case "desc":
+                                    query = query.OrderByDescending(order);
+                                    break;
+
+                            }
+                        }
+                        break;
+
                 }
-                ToBaseSpecification(item);
+                query = ToBaseSpecification(item, query);
             }
+            return query;
         }
 
-        public override void ApplyFilterSpec()
-        {
-            #region Filter
-            Filter = new List<Expression<Func<User, bool>>>();
-            if (Id.HasValue && Id != 0)
-            {
-                Filter.Add(x => x.Id == Id);
-            }
-            if (!string.IsNullOrEmpty(UserName))
-            {
-                Filter.Add(x => x.UserName.Contains(UserName));
-            }
-            #endregion
-
-            #region Order
-            if (!string.IsNullOrEmpty(Order))
-            {
-                var orderItem = Order.Split(" ");
-                if (orderItem.Length == 2)
-                {
-                    Expression<Func<User, object>>? order = null;
-                    if (orderItem[0].ToLower() == "id") { order = x => x.Id; }
-                    if (orderItem[0].ToLower() == "username") { order = x => x.UserName; }
-                    if (orderItem[1].ToLower() == "asc" && order != null) { OrderBy = order; }
-                    if (orderItem[1].ToLower() == "desc" && order != null) { OrderByDesc = order; }
-                }
-            }
-            #endregion
-        }
+        
     }
 }

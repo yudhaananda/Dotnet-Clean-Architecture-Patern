@@ -11,18 +11,8 @@ namespace ApplicationCore.Filters
 {
     public abstract class BaseFilter<T>
     {
-        #region JsonIgnore Properties
-        [JsonIgnore]
-        public List<Expression<Func<T, bool>>>? Filter { get; set; }
-        [JsonIgnore]
-        public Expression<Func<T, Object>>? OrderBy { get; set; }
-        [JsonIgnore]
-        public Expression<Func<T, Object>>? OrderByDesc { get; set; }
-        #endregion
-        public string? Order { get; set; }
         public int? Page { get; set; }
         public int? Take { get; set; }
-        public bool? Include { get; set; }
 
         public int Skip()
         {
@@ -33,16 +23,12 @@ namespace ApplicationCore.Filters
             else { return 0; }
         }
 
-        public abstract void ApplyFilterSpec();
-        public abstract void ToSpecification(Dictionary<string, string> filter);
+        public abstract IQueryable<T> ToSpecification(Dictionary<string, string> filter, IQueryable<T> query);
 
-        protected void ToBaseSpecification(KeyValuePair<string, string> item)
+        protected IQueryable<T> ToBaseSpecification(KeyValuePair<string, string> item, IQueryable<T>query)
         {
             switch (item.Key.ToLower())
             {
-                case "order":
-                    Order = item.Value;
-                    break;
                 case "Page":
                     int page;
                     if (int.TryParse(item.Value, out page))
@@ -57,14 +43,13 @@ namespace ApplicationCore.Filters
                         Take = take;
                     }
                     break;
-                case "include":
-                    bool include;
-                    if (bool.TryParse(item.Value, out include))
-                    {
-                        Include = include;
-                    }
-                    break;
             }
+            if (Page != null && Take != null)
+            {
+                query.Skip((Page.Value-1) * Take.Value);
+                query.Take(Take.Value);
+            }
+            return query;
         }
 
     }

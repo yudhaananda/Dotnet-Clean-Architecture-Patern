@@ -11,7 +11,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly IUserService _service;
 
@@ -66,12 +66,6 @@ namespace WebAPI.Controllers
                 return BadRequest("Failed to Delete User");
             }
             return Ok(isDeleted);
-        }
-
-        protected IMapper Mapper<T,P>()
-        {
-            var mapperConfig = new MapperConfiguration(c => c.CreateMap<T, P>());
-            return mapperConfig.CreateMapper();
         }
     }
 }

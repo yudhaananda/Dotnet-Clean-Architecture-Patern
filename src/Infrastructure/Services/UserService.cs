@@ -36,7 +36,6 @@ namespace Infrastructure.Services
 
         public async Task<List<User>> GetAsync(Dictionary<string, string> filter, CancellationToken cancellation)
         {
-            
             return await _repository.User.GetAsync(filter, new UserFilter(), cancellation);
         }
     }

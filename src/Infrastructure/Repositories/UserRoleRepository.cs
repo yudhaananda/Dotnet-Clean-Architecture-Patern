@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationCore
+namespace Infrastructure.Repositories
 {
-    public interface IUnitOfWork
+    public class UserRoleRepository : AsyncRepository<UserRole, UserRoleFilter>, IUserRoleRepository
     {
-        IUserRepository User { get; } 
-        IUserRoleRepository UserRole { get; } 
-        IRoleRepository Role { get; } 
+        public UserRoleRepository(DataContext db) : base(db)
+        {
+        }
     }
 }

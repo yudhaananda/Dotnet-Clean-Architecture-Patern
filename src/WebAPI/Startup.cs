@@ -47,6 +47,8 @@ namespace WebAPI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
             #endregion
 
             #region DbContext
@@ -74,6 +76,8 @@ namespace WebAPI
             });
             services.AddAuthorization();
             #endregion
+
+            services.AddAutoMapper(typeof(Startup));
 
             #region Swagger
             services.AddSwaggerGen(c =>

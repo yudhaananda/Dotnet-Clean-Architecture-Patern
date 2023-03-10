@@ -15,7 +15,7 @@ namespace ApplicationCore.Models
         public string UserName { get; set; }
         [Required]
         public string Password { get; set; }     
-        public virtual ICollection<UserRole> UserRoles { get; set;}
+        public virtual ICollection<UserRole>? UserRoles { get; set;}
 
         public override void Edit(User user)
         {

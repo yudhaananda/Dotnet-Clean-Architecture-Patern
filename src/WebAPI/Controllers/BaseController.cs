@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using ApplicationCore.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
 {
@@ -14,4 +16,5 @@ namespace WebAPI.Controllers
             return mapperConfig.CreateMapper();
         }
     }
+   
 }

@@ -14,10 +14,12 @@ namespace WebAPI.Controllers
     public class UserController : BaseController
     {
         private readonly IUserService _service;
+        private readonly IMapper _mapper;
 
         public UserController(IUserService service)
         {
             _service = service;
+            _mapper = new MapperConfiguration(c => { c.CreateMap<User, UserViewModel>().ForMember(e => e.UserRoles, x => x.MapFrom(a => a.UserRoles)); c.CreateMap<UserRole, UserRoleViewModel>(); }).CreateMapper();
         }
         [HttpGet]
         public async Task<ActionResult<List<UserViewModel>>> GetUser([FromQuery]Dictionary<string, string> filter, CancellationToken cancellation)
@@ -27,11 +29,7 @@ namespace WebAPI.Controllers
             {
                 return NotFound();
             }
-            var result = new List<UserViewModel>();
-            foreach (var item in user)
-            {
-                result.Add(Mapper<User, UserViewModel>().Map<UserViewModel>(item));
-            }
+            var result = user.Select(_mapper.Map<User, UserViewModel>);
             return Ok(result);
         }
 

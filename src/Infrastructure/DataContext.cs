@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Models;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure
 {

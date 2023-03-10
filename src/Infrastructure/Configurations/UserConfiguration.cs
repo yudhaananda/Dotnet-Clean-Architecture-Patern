@@ -15,7 +15,7 @@ namespace Infrastructure.Configurations
         {
             builder.HasKey(e => e.Id);
 
-            builder.HasMany(e => e.UserRoles).WithOne(e=>e.User).HasForeignKey(e=>e.UserId);
+            builder.HasMany(e => e.UserRoles).WithOne(e => e.User).HasForeignKey(e => e.UserId);
 
             builder.HasQueryFilter(m => EF.Property<DateTime?>(m, "DeletedDate") == null);
         }

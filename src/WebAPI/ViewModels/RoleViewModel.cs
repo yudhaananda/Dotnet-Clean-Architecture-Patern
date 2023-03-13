@@ -1,11 +1,9 @@
-﻿using ApplicationCore.Models;
-
-namespace WebAPI.ViewModels
+﻿namespace WebAPI.ViewModels
 {
-    public class RoleViewModel
+    public class RoleViewModel : BaseVIewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<UserRoleViewModel> UserRoles { get; set; }
+        public virtual ICollection<UserRoleViewModel>? UserRoles { get; set; }
     }
 }

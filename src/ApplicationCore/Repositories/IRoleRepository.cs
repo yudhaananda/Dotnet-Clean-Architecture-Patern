@@ -3,7 +3,7 @@ using ApplicationCore.Models;
 
 namespace ApplicationCore.Repositories
 {
-    public interface IUserRepository : IAsyncRepository<User, UserFilter>
+    public interface IRoleRepository : IAsyncRepository<Role, RoleFilter>
     {
     }
 }

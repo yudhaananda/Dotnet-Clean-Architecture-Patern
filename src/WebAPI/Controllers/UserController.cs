@@ -1,9 +1,6 @@
-﻿using ApplicationCore.Filters;
-using ApplicationCore.Models;
+﻿using ApplicationCore.Models;
 using ApplicationCore.Services;
 using AutoMapper;
-using Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
 
@@ -11,34 +8,32 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly IUserService _service;
+        private readonly IMapper _mapper;
 
         public UserController(IUserService service)
         {
             _service = service;
+            _mapper = new MapperConfiguration(c => { c.CreateMap<User, UserViewModel>().ForMember(e => e.UserRoles, x => x.MapFrom(a => a.UserRoles)); c.CreateMap<UserRole, UserRoleViewModel>(); }).CreateMapper();
         }
         [HttpGet]
-        public async Task<ActionResult<List<UserViewModel>>> GetUser([FromQuery]Dictionary<string, string> filter, CancellationToken cancellation)
+        public async Task<ActionResult<List<UserViewModel>>> GetUser([FromQuery] Dictionary<string, string> filter, CancellationToken cancellation)
         {
             var user = await _service.GetAsync(filter, cancellation);
             if (user.Count == 0)
             {
                 return NotFound();
             }
-            var result = new List<UserViewModel>();
-            foreach (var item in user)
-            {
-                result.Add(Mapper<User, UserViewModel>().Map<UserViewModel>(item));
-            }
+            var result = user.Select(_mapper.Map<User, UserViewModel>);
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<bool>> CreateUser(UserViewModel userViewModel, CancellationToken cancellation)
         {
-            var user = Mapper<UserViewModel, User>().Map<User>(userViewModel);
+            var user = _mapper.Map<User>(userViewModel);
             var isCreated = await _service.CreateAsync(user, cancellation);
             if (!isCreated)
             {
@@ -49,7 +44,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> EditUser(int id, UserViewModel userViewModel, CancellationToken cancellation)
         {
-            var user = Mapper<UserViewModel, User>().Map<User>(userViewModel);
+            var user = _mapper.Map<User>(userViewModel);
             var isEdited = await _service.EditAsync(user, id, cancellation);
             if (!isEdited)
             {
@@ -66,12 +61,6 @@ namespace WebAPI.Controllers
                 return BadRequest("Failed to Delete User");
             }
             return Ok(isDeleted);
-        }
-
-        protected IMapper Mapper<T,P>()
-        {
-            var mapperConfig = new MapperConfiguration(c => c.CreateMap<T, P>());
-            return mapperConfig.CreateMapper();
         }
     }
 }

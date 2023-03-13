@@ -4,9 +4,9 @@ using ApplicationCore.Repositories;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : AsyncRepository<User, UserFilter>, IUserRepository
+    public class RoleRepository : AsyncRepository<Role, RoleFilter>, IRoleRepository
     {
-        public UserRepository(DataContext db) : base(db)
+        public RoleRepository(DataContext db) : base(db)
         {
         }
     }

@@ -4,12 +4,10 @@ using System.Linq.Expressions;
 
 namespace ApplicationCore.Filters
 {
-    public class UserFilter : BaseFilter<User>
+    public class UserRoleFilter : BaseFilter<UserRole>
     {
-
-        public override IQueryable<User> ToSpecification(Dictionary<string, string> filter, IQueryable<User> query)
+        public override IQueryable<UserRole> ToSpecification(Dictionary<string, string> filter, IQueryable<UserRole> query)
         {
-
             foreach (var item in filter)
             {
                 switch (item.Key.ToLower())
@@ -21,8 +19,19 @@ namespace ApplicationCore.Filters
                             query = query.Where(x => x.Id == id);
                         }
                         break;
-                    case "username":
-                        query = query.Where(x => x.UserName.Contains(item.Value));
+                    case "roleid":
+                        int roleId;
+                        if (int.TryParse(item.Value, out roleId))
+                        {
+                            query = query.Where(x => x.RoleId == roleId);
+                        }
+                        break;
+                    case "userid":
+                        int userId;
+                        if (int.TryParse(item.Value, out userId))
+                        {
+                            query = query.Where(x => x.UserId == userId);
+                        }
                         break;
                     case "include":
                         bool include;
@@ -30,7 +39,8 @@ namespace ApplicationCore.Filters
                         {
                             if (include)
                             {
-                                query = query.Include(x => x.UserRoles);
+                                query = query.Include(x => x.User);
+                                query = query.Include(x => x.Role);
                             }
                         }
                         break;
@@ -38,14 +48,17 @@ namespace ApplicationCore.Filters
                         var orderItem = item.Value.Split(" ");
                         if (orderItem.Length == 2)
                         {
-                            Expression<Func<User, object>>? order = null;
+                            Expression<Func<UserRole, object>>? order = null;
                             switch (orderItem[0].ToLower())
                             {
                                 case "id":
                                     order = x => x.Id;
                                     break;
-                                case "username":
-                                    order = x => x.UserName;
+                                case "roleid":
+                                    order = x => x.RoleId;
+                                    break;
+                                case "userid":
+                                    order = x => x.UserId;
                                     break;
 
                             }
@@ -70,7 +83,6 @@ namespace ApplicationCore.Filters
             }
             return query;
         }
-
-
     }
+
 }

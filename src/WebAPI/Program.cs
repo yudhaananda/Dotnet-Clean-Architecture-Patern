@@ -1,5 +1,4 @@
 using NLog.Web;
-using System.Reflection.Metadata;
 using WebAPI;
 
 namespace PlafondMonitoringAPI

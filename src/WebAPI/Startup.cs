@@ -1,14 +1,10 @@
-﻿using ApplicationCore.Services;
-using ApplicationCore;
-using Infrastructure.Services;
+﻿using ApplicationCore;
+using ApplicationCore.Services;
 using Infrastructure;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using ApplicationCore.Filters;
-using ApplicationCore.Models;
-using ApplicationCore.Repositories;
-using Infrastructure.Repositories;
 
 namespace WebAPI
 {
@@ -45,7 +41,7 @@ namespace WebAPI
 
             #region Services
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserRoleService, UserRoleService>();

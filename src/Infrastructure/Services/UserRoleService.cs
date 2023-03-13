@@ -2,11 +2,6 @@
 using ApplicationCore.Filters;
 using ApplicationCore.Models;
 using ApplicationCore.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -35,7 +30,21 @@ namespace Infrastructure.Services
 
         public async Task<List<UserRole>> GetAsync(Dictionary<string, string> filter, CancellationToken cancellation)
         {
-            return await _repository.UserRole.GetAsync(filter, new UserRoleFilter(), cancellation);
+            var userRoles = await _repository.UserRole.GetAsync(filter, new UserRoleFilter(), cancellation);
+
+            foreach (var item in userRoles)
+            {
+                if (item.User != null)
+                {
+                    item.User.UserRoles = null;
+                }
+                if (item.Role != null)
+                {
+                    item.Role.UserRoles = null;
+                }
+            }
+
+            return userRoles;
         }
     }
 }

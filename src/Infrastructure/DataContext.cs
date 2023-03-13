@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Models;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure
 {
@@ -16,8 +15,8 @@ namespace Infrastructure
             Database.SetCommandTimeout(TimeSpan.FromSeconds(120));
         }
 
-        public DbSet<User> Users { get; set; }     
-        public DbSet<UserRole> UserRoles { get; set; }     
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Role> Roles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)

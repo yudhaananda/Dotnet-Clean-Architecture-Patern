@@ -1,9 +1,6 @@
-﻿using ApplicationCore.Filters;
-using ApplicationCore.Models;
+﻿using ApplicationCore.Models;
 using ApplicationCore.Services;
 using AutoMapper;
-using Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
 
@@ -22,7 +19,7 @@ namespace WebAPI.Controllers
             _mapper = new MapperConfiguration(c => { c.CreateMap<User, UserViewModel>().ForMember(e => e.UserRoles, x => x.MapFrom(a => a.UserRoles)); c.CreateMap<UserRole, UserRoleViewModel>(); }).CreateMapper();
         }
         [HttpGet]
-        public async Task<ActionResult<List<UserViewModel>>> GetUser([FromQuery]Dictionary<string, string> filter, CancellationToken cancellation)
+        public async Task<ActionResult<List<UserViewModel>>> GetUser([FromQuery] Dictionary<string, string> filter, CancellationToken cancellation)
         {
             var user = await _service.GetAsync(filter, cancellation);
             if (user.Count == 0)
@@ -36,7 +33,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> CreateUser(UserViewModel userViewModel, CancellationToken cancellation)
         {
-            var user = Mapper<UserViewModel, User>().Map<User>(userViewModel);
+            var user = _mapper.Map<User>(userViewModel);
             var isCreated = await _service.CreateAsync(user, cancellation);
             if (!isCreated)
             {
@@ -47,7 +44,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> EditUser(int id, UserViewModel userViewModel, CancellationToken cancellation)
         {
-            var user = Mapper<UserViewModel, User>().Map<User>(userViewModel);
+            var user = _mapper.Map<User>(userViewModel);
             var isEdited = await _service.EditAsync(user, id, cancellation);
             if (!isEdited)
             {

@@ -75,8 +75,5 @@ namespace Infrastructure.Repositories
             query = spec.ToSpecification(filter, query);
             return await query.ToListAsync(cancellation);
         }
-
-
-
     }
 }

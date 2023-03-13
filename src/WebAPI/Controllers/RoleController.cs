@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Models;
 using ApplicationCore.Services;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
 
@@ -11,9 +11,11 @@ namespace WebAPI.Controllers
     public class RoleController : BaseController
     {
         private readonly IRoleService _service;
-        public RoleController(IRoleService service) 
-        { 
+        private readonly IMapper _mapper;
+        public RoleController(IRoleService service)
+        {
             _service = service;
+            _mapper = new MapperConfiguration(c => { c.CreateMap<Role, RoleViewModel>().ForMember(e => e.UserRoles, x => x.MapFrom(a => a.UserRoles)); c.CreateMap<UserRole, UserRoleViewModel>(); }).CreateMapper();
         }
 
         [HttpGet]
@@ -27,7 +29,7 @@ namespace WebAPI.Controllers
             var result = new List<RoleViewModel>();
             foreach (var item in role)
             {
-                result.Add(Mapper<Role, RoleViewModel>().Map<RoleViewModel>(item));
+                result.Add(_mapper.Map<RoleViewModel>(item));
             }
             return Ok(result);
         }
@@ -35,7 +37,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> CreateRole(RoleViewModel roleViewModel, CancellationToken cancellation)
         {
-            var role = Mapper<RoleViewModel, Role>().Map<Role>(roleViewModel);
+            var role = _mapper.Map<Role>(roleViewModel);
             var isCreated = await _service.CreateAsync(role, cancellation);
             if (!isCreated)
             {
@@ -46,7 +48,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> EditRole(int id, RoleViewModel roleViewModel, CancellationToken cancellation)
         {
-            var role = Mapper<RoleViewModel, Role>().Map<Role>(roleViewModel);
+            var role = _mapper.Map<Role>(roleViewModel);
             var isEdited = await _service.EditAsync(role, id, cancellation);
             if (!isEdited)
             {

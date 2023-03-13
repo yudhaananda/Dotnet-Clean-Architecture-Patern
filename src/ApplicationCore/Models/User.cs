@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationCore.Models
 {
@@ -14,8 +9,8 @@ namespace ApplicationCore.Models
         [Required]
         public string UserName { get; set; }
         [Required]
-        public string Password { get; set; }     
-        public virtual ICollection<UserRole>? UserRoles { get; set;}
+        public string Password { get; set; }
+        public virtual ICollection<UserRole>? UserRoles { get; set; }
 
         public override void Edit(User user)
         {

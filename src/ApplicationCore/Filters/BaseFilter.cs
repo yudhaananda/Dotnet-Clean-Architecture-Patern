@@ -1,13 +1,4 @@
-﻿using ApplicationCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace ApplicationCore.Filters
+﻿namespace ApplicationCore.Filters
 {
     public abstract class BaseFilter<T>
     {
@@ -25,7 +16,7 @@ namespace ApplicationCore.Filters
 
         public abstract IQueryable<T> ToSpecification(Dictionary<string, string> filter, IQueryable<T> query);
 
-        protected IQueryable<T> ToBaseSpecification(KeyValuePair<string, string> item, IQueryable<T>query)
+        protected IQueryable<T> ToBaseSpecification(KeyValuePair<string, string> item, IQueryable<T> query)
         {
             switch (item.Key.ToLower())
             {
@@ -46,7 +37,7 @@ namespace ApplicationCore.Filters
             }
             if (Page != null && Take != null)
             {
-                query.Skip((Page.Value-1) * Take.Value);
+                query.Skip((Page.Value - 1) * Take.Value);
                 query.Take(Take.Value);
             }
             return query;

@@ -1,20 +1,15 @@
 ﻿using ApplicationCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace ApplicationCore.Filters
 {
     public class UserFilter : BaseFilter<User>
     {
 
-        public override IQueryable<User> ToSpecification(Dictionary<string, string> filter, IQueryable<User>query)
+        public override IQueryable<User> ToSpecification(Dictionary<string, string> filter, IQueryable<User> query)
         {
-            
+
             foreach (var item in filter)
             {
                 switch (item.Key.ToLower())
@@ -24,14 +19,14 @@ namespace ApplicationCore.Filters
                         if (int.TryParse(item.Value, out id))
                         {
                             query = query.Where(x => x.Id == id);
-                        } 
+                        }
                         break;
                     case "username":
                         query = query.Where(x => x.UserName.Contains(item.Value));
                         break;
                     case "include":
                         bool include;
-                        if (bool.TryParse(item.Value,out include))
+                        if (bool.TryParse(item.Value, out include))
                         {
                             if (include)
                             {
@@ -54,15 +49,18 @@ namespace ApplicationCore.Filters
                                     break;
 
                             }
-                            switch (orderItem[1].ToLower())
+                            if (order != null)
                             {
-                                case "asc":
-                                    query = query.OrderBy(order);
-                                    break;
-                                case "desc":
-                                    query = query.OrderByDescending(order);
-                                    break;
+                                switch (orderItem[1].ToLower())
+                                {
+                                    case "asc":
+                                        query = query.OrderBy(order);
+                                        break;
+                                    case "desc":
+                                        query = query.OrderByDescending(order);
+                                        break;
 
+                                }
                             }
                         }
                         break;
@@ -73,6 +71,6 @@ namespace ApplicationCore.Filters
             return query;
         }
 
-        
+
     }
 }

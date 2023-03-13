@@ -2,12 +2,6 @@
 using ApplicationCore.Filters;
 using ApplicationCore.Models;
 using ApplicationCore.Services;
-using Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
@@ -40,7 +34,8 @@ namespace Infrastructure.Services
 
             foreach (var item in users)
             {
-                if (item.UserRoles != null){
+                if (item.UserRoles != null)
+                {
                     foreach (var item1 in item.UserRoles)
                     {
                         item1.User = null;

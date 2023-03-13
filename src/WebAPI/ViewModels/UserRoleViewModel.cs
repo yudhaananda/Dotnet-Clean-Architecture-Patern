@@ -1,6 +1,4 @@
-﻿using ApplicationCore.Models;
-
-namespace WebAPI.ViewModels
+﻿namespace WebAPI.ViewModels
 {
     public class UserRoleViewModel : BaseVIewModel
     {

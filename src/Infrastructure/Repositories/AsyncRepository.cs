@@ -1,13 +1,7 @@
 ﻿using ApplicationCore.Filters;
 using ApplicationCore.Models;
 using ApplicationCore.Repositories;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -28,7 +22,8 @@ namespace Infrastructure.Repositories
                 await _db.Set<T>().AddAsync(entity, cancellation);
                 await _db.SaveChangesAsync(cancellation);
                 return true;
-            }catch (Exception ex)
+            }
+            catch
             {
                 return false;
             }
@@ -46,13 +41,14 @@ namespace Infrastructure.Repositories
                 data.Delete();
                 await _db.SaveChangesAsync(cancellation);
                 return true;
-            }catch (Exception ex)
+            }
+            catch
             {
                 return false;
             }
         }
 
-        public async Task<bool> EditAsync(T entity,int id, CancellationToken cancellation)
+        public async Task<bool> EditAsync(T entity, int id, CancellationToken cancellation)
         {
             try
             {
@@ -61,12 +57,13 @@ namespace Infrastructure.Repositories
                 {
                     return false;
                 }
-                
+
                 oldData.Edit(entity);
 
                 await _db.SaveChangesAsync(cancellation);
                 return true;
-            }catch (Exception ex)
+            }
+            catch
             {
                 return false;
             }
@@ -78,8 +75,5 @@ namespace Infrastructure.Repositories
             query = spec.ToSpecification(filter, query);
             return await query.ToListAsync(cancellation);
         }
-
-
-
     }
 }

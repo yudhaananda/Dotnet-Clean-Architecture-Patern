@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationCore.Models
 {
@@ -16,7 +11,8 @@ namespace ApplicationCore.Models
 
         public override void Edit(Role entity)
         {
-            throw new NotImplementedException();
+            Name = entity.Name;
+            UpdatedDate = DateTime.Now;
         }
     }
 }

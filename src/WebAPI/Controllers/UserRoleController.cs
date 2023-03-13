@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Models;
 using ApplicationCore.Services;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
 
@@ -11,9 +11,11 @@ namespace WebAPI.Controllers
     public class UserRoleController : BaseController
     {
         private readonly IUserRoleService _service;
+        private readonly IMapper _mapper;
         public UserRoleController(IUserRoleService service)
         {
             _service = service;
+            _mapper = new MapperConfiguration(c => { c.CreateMap<UserRole, UserRoleViewModel>().ForMember(e => e.Role, x => x.MapFrom(a => a.Role)).ForMember(e => e.User, x => x.MapFrom(a => a.User)); c.CreateMap<Role, RoleViewModel>(); c.CreateMap<User, UserViewModel>(); }).CreateMapper();
         }
 
         [HttpGet]
@@ -27,7 +29,7 @@ namespace WebAPI.Controllers
             var result = new List<UserRoleViewModel>();
             foreach (var item in userRole)
             {
-                result.Add(Mapper<UserRole, UserRoleViewModel>().Map<UserRoleViewModel>(item));
+                result.Add(_mapper.Map<UserRoleViewModel>(item));
             }
             return Ok(result);
         }
@@ -35,7 +37,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> CreateUserRole(UserRoleViewModel userRoleViewModel, CancellationToken cancellation)
         {
-            var userRole = Mapper<UserRoleViewModel, UserRole>().Map<UserRole>(userRoleViewModel);
+            var userRole = _mapper.Map<UserRole>(userRoleViewModel);
             var isCreated = await _service.CreateAsync(userRole, cancellation);
             if (!isCreated)
             {
@@ -46,7 +48,7 @@ namespace WebAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> EditUserRole(int id, UserRoleViewModel userRoleViewModel, CancellationToken cancellation)
         {
-            var userRole = Mapper<UserRoleViewModel, UserRole>().Map<UserRole>(userRoleViewModel);
+            var userRole = _mapper.Map<UserRole>(userRoleViewModel);
             var isEdited = await _service.EditAsync(userRole, id, cancellation);
             if (!isEdited)
             {
